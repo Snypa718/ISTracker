@@ -160,34 +160,39 @@ def main():
         st.write(total_quantity)
     elif page == 'Edit Inventory':
         st.header('Edit Inventory')
-        selected_item = st.selectbox('Select Item to Edit', inventory_df['Item'].unique())
-        selected_row = inventory_df[inventory_df['Item'] == selected_item].iloc[0]
 
-        item_name = st.text_input('Item', value=selected_row['Item'])
-        quantity = st.number_input('Quantity', value=selected_row['Quantity'])
-        item_number = st.text_input('Item Number', value=selected_row['Item Number'])
-        buy_price = st.number_input('Buy Price', value=selected_row['Buy Price'])
-        tax = st.number_input('Tax', value=selected_row['Tax'])
-        fees = st.number_input('Fees', value=selected_row['Fees'])
-        date = st.date_input('Date', value=pd.to_datetime(selected_row['Date']))
+        if inventory_df.empty:
+            st.warning('No inventory data available. Please add inventory data first.')
+        else:
+            selected_item = st.selectbox('Select Item to Edit', inventory_df['Item'].unique())
+            selected_row = inventory_df[inventory_df['Item'] == selected_item].iloc[0]
 
-        if st.button('Save Edit'):
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Item'] = item_name
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Quantity'] = quantity
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Item Number'] = item_number
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Buy Price'] = buy_price
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Tax'] = tax
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Fees'] = fees
-            inventory_df.loc[inventory_df['Item'] == selected_item, 'Date'] = date
-            save_inventory_data(inventory_df)
-            st.success('Edit saved successfully.')
+            item_name = st.text_input('Item', value=selected_row['Item'])
+            quantity = st.number_input('Quantity', value=selected_row['Quantity'])
+            item_number = st.text_input('Item Number', value=selected_row['Item Number'])
+            buy_price = st.number_input('Buy Price', value=selected_row['Buy Price'])
+            tax = st.number_input('Tax', value=selected_row['Tax'])
+            fees = st.number_input('Fees', value=selected_row['Fees'])
+            date = st.date_input('Date', value=pd.to_datetime(selected_row['Date']))
 
-        if st.button('Delete Item'):
-            inventory_df = inventory_df[inventory_df['Item'] != selected_item]
-            save_inventory_data(inventory_df)
-            st.success('Item deleted successfully.')
+            if st.button('Save Edit'):
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Item'] = item_name
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Quantity'] = quantity
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Item Number'] = item_number
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Buy Price'] = buy_price
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Tax'] = tax
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Fees'] = fees
+                inventory_df.loc[inventory_df['Item'] == selected_item, 'Date'] = date
+                save_inventory_data(inventory_df)
+                st.success('Edit saved successfully.')
 
-##################################################
+            if st.button('Delete Item'):
+                inventory_df = inventory_df[inventory_df['Item'] != selected_item]
+                save_inventory_data(inventory_df)
+                st.success('Item deleted successfully.')
+
+
+    ##################################################
     elif page == 'Edit Sales':
         st.header('Edit Sales')
 
